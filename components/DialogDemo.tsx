@@ -38,7 +38,6 @@ import {
 
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
-import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -78,7 +77,13 @@ const DialogPage = () => {
           Open The Dialog
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        className="sm:max-w-[425px]"
+        // Prevent the dialog from closing when clicking outside
+        onInteractOutside={(e) => {
+          e.preventDefault();
+        }}
+      >
         <DialogHeader>
           <DialogTitle>Dialog Title</DialogTitle>
           <DialogDescription>This is the dialog description</DialogDescription>
@@ -207,7 +212,9 @@ const DialogPage = () => {
             <Button
               type="button"
               variant={"secondary"}
-              onClick={() => form.reset()}
+              onClick={() => {
+                form.reset();
+              }}
             >
               Cancel
             </Button>
