@@ -3,7 +3,7 @@ import DialogDemo from "./_components/DialogDemo";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center gap-x-10 p-24">
+    <main className="flex min-h-screen items-top justify-center gap-x-10 p-24">
       <DialogDemo />
       <CommandDemo />
     </main>

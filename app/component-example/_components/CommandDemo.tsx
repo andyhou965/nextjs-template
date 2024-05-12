@@ -1,11 +1,4 @@
-import {
-  Calculator,
-  Calendar,
-  CreditCard,
-  Settings,
-  Smile,
-  User,
-} from "lucide-react";
+"use client";
 
 import {
   Command,
@@ -15,7 +8,6 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command";
 
 import {
@@ -24,8 +16,15 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
+import { User } from "@prisma/client";
 
 export function CommandDemo() {
+  const usersQuery = useQuery({
+    queryKey: ["all-users"],
+    queryFn: () => fetch("/api/users").then((res) => res.json()),
+  });
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -38,40 +37,25 @@ export function CommandDemo() {
       </PopoverTrigger>
       <PopoverContent>
         <Command className="rounded-lg border shadow-md">
-          <CommandInput placeholder="Type a command or search..." />
+          <CommandInput placeholder="Check the user list..." />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup heading="Suggestions">
-              <CommandItem>
-                <Calendar className="mr-2 h-4 w-4" />
-                <span>Calendar</span>
-              </CommandItem>
-              <CommandItem>
-                <Smile className="mr-2 h-4 w-4" />
-                <span>Search Emoji</span>
-              </CommandItem>
-              <CommandItem>
-                <Calculator className="mr-2 h-4 w-4" />
-                <span>Calculator</span>
-              </CommandItem>
+            <CommandGroup heading="Name">
+              {usersQuery.data?.map((user: User) => (
+                <CommandItem key={user.userId}>
+                  <span>
+                    {user.first_name} {user.last_name}
+                  </span>
+                </CommandItem>
+              ))}
             </CommandGroup>
             <CommandSeparator />
-            <CommandGroup heading="Settings">
-              <CommandItem>
-                <User className="mr-2 h-4 w-4" />
-                <span>Profile</span>
-                <CommandShortcut>⌘P</CommandShortcut>
-              </CommandItem>
-              <CommandItem>
-                <CreditCard className="mr-2 h-4 w-4" />
-                <span>Billing</span>
-                <CommandShortcut>⌘B</CommandShortcut>
-              </CommandItem>
-              <CommandItem>
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
-                <CommandShortcut>⌘S</CommandShortcut>
-              </CommandItem>
+            <CommandGroup heading="Emails">
+              {usersQuery.data?.map((user: User) => (
+                <CommandItem key={user.userId}>
+                  <span>{user.email}</span>
+                </CommandItem>
+              ))}
             </CommandGroup>
           </CommandList>
         </Command>
