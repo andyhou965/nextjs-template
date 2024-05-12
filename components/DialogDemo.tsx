@@ -11,8 +11,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-
 import {
   Select,
   SelectContent,
@@ -43,29 +41,33 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-
-const UserSchema = z.object({
-  email: z.string({ required_error: "Email address is required" }).email(),
-  first_name: z
-    .string({ required_error: "First name is required" })
-    .min(2, { message: "First name must be at least 2 characters" })
-    .max(20),
-  last_name: z.string().optional(),
-  gender: z.enum(["male", "female", "other"]),
-  // z.coerce.date() will convert string to date.
-  // But z.date() will only accept date
-  date_of_birth: z.coerce.date(),
-});
+import { useMutation } from "@tanstack/react-query";
+import { useCallback } from "react";
+import { UserSchema, UserSchemaType } from "@/schema/users";
+import { SaveUser } from "@/app/_actions/users";
 
 const DialogPage = () => {
-  const form = useForm<z.infer<typeof UserSchema>>({
+  const form = useForm<UserSchemaType>({
     resolver: zodResolver(UserSchema),
     defaultValues: {},
   });
 
-  const onSubmit = (data: z.infer<typeof UserSchema>) => {
-    console.log(data);
-  };
+  const { mutate, isPending } = useMutation({
+    mutationFn: SaveUser,
+    onSuccess: (data) => {
+      console.log("onSuccess", data);
+    },
+    onError: (error) => {
+      console.log("onError", error);
+    },
+  });
+
+  const onSubmit = useCallback(
+    (data: z.infer<typeof UserSchema>) => {
+      mutate(data);
+    },
+    [mutate]
+  );
 
   return (
     <Dialog>
@@ -89,7 +91,7 @@ const DialogPage = () => {
           <DialogDescription>This is the dialog description</DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
               name="first_name"
@@ -219,7 +221,9 @@ const DialogPage = () => {
               Cancel
             </Button>
           </DialogClose>
-          <Button onClick={form.handleSubmit(onSubmit)}>Save</Button>
+          <Button onClick={form.handleSubmit(onSubmit)} disabled={isPending}>
+            Save
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

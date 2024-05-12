@@ -14,7 +14,7 @@ datasource db {
 }
 
 model User {
-    userId        String   @id @default(cuid())
+    userId        String   @id @default(uuid())
     email         String   @unique
     first_name    String
     last_name     String?
