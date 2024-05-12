@@ -20,9 +20,9 @@ const Navbar = () => {
 };
 
 const items = [
-  { label: "Dashboard", link: "/" },
-  { label: "Menu01", link: "/menu01" },
-  { label: "Menu02", link: "/menu02" },
+  { label: "Components", link: "/component-example" },
+  { label: "Dashboard-Navbar", link: "/dashboard-navbar" },
+  { label: "Dashboard-Sidebar", link: "/dashbard-sidebar" },
 ];
 
 function MobileNavbar() {

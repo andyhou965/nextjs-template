@@ -1,5 +1,5 @@
-import { CommandDemo } from "@/components/CommandDemo";
-import DialogDemo from "@/components/DialogDemo";
+import { CommandDemo } from "./_components/CommandDemo";
+import DialogDemo from "./_components/DialogDemo";
 
 export default function Home() {
   return (

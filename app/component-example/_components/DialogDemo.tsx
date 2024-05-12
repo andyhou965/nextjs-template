@@ -44,7 +44,7 @@ import { format } from "date-fns";
 import { useMutation } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { UserSchema, UserSchemaType } from "@/schema/users";
-import { SaveUser } from "@/app/_actions/users";
+import { SaveUser } from "../_actions/users";
 
 const DialogPage = () => {
   const form = useForm<UserSchemaType>({
